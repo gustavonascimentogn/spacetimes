@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{%  load static %}
+{% block main %}
+
+    {% if view.kwargs.mensagem %}
+    <div class="alert alert-success" role="alert">
+      {{ view.kwargs.mensagem }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %}
+    <p>
+        <h1>Arquivos enviados</h1>
+        <a href="{% url 'create_arquivo' %}" class="btn btn-info">Processar novo arquivo</a>
+    </p>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span class="current">
+                [Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}]
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            {% endif %}
+        </span>
+    </div><br>
+
+    <div class="row">
+        {%  for arquivo in object_list %}
+        <div class="col-md-3">
+            <div class="card bg-light mb-3" >
+                <div class="card-header">{{ arquivo.nome }}</div>
+                <div class="card-body">
+                    <!-- <h5 class="card-title">&nbsp;</h5> -->
+                    <p class="card-text">
+                        {{ arquivo.nome }}<br>
+                        <a href="/media/{{ arquivo.arquivo }}" download="true">{{ arquivo.arquivo }}</a> <br>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent" align="center">
+
+                    <a href="{% url 'delete_arquivo' arquivo.id %}"><img src="{% static 'images/delete.png'%}" alt="Deletar" ></a>&nbsp;
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div><br>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Primeira</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span class="current">
+                [Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}]
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            {% endif %}
+        </span>
+    </div><br>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block main %}
+
+    <br>
+    <div class="card bg-light mb-3" >
+        <div class="card-header">
+        <h1>Arquivos</h1>
+      </div>
+      <div class="card-body">
+
+        <p class="card-text">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form|bootstrap }}
+
+                </div>
+                    <div class="card-footer bg-transparent" align="center">
+                            <button type="submit" class="btn btn-info">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </p>
+
+{% endblock %}
+

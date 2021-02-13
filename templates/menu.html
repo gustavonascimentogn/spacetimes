@@ -1,0 +1,58 @@
+{%  load static %}
+{%  load i18n %}
+
+<div class="col-sm-10 col-form-label col-form-label-sm" style="text-align:left;" >
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="{% url 'home'   %}">
+    <span class="navbar-logo">
+        <a href="{% url 'home' %}">
+            <img src="{% static 'images/logo.png' %}" alt="Logotipo" title="" style="height: 3rem;" class="">
+        </a>
+    </span>
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'home'   %}">&nbsp; <span class="sr-only">(current)</span></a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {% trans "Cadastros"%}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'list_arquivos' %}">{% trans "Arquivos"%}</a>
+        </div>
+      </li>
+
+
+
+      {% if user.is_authenticated %}
+       <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout' %}">{% trans "Sair"%}</a>
+      </li>
+     {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'login'%}?next={{request.path}}">{% trans "Login"%}</a>
+      </li>
+     {% endif %}
+
+    </ul>
+
+  </div>
+  <div class="navbar justify-content-between">
+    <form class="form-inline" method="GET">
+      <div class="input-group input-group-sm mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm"><i class="fa fa-search"></i></span>
+        </div>
+        <input type="search" class="form-control" aria-label="Search" aria-describedby="inputGroup-sizing-sm"  name="search" id="search">
+        <button class="btn btn-sm btn-outline-secondary" type="submit" id="btneraser"><i class="fa fa-eraser"></i></button>
+      </div>
+    </form>
+  </div>
+</nav>
+</div>

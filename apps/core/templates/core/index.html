@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<br>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-footer bg-transparent" align="center">
+                <a href="#">Clientes cadastrados ({{   total_clientes   }})</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-footer bg-transparent" align="center">
+                <a href="#">Clientes sem contrato ({{   total_clientes_sem_pedidos   }})</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-footer bg-transparent" align="center">
+                <a href="#">Contratos ativos ({{   total_contratos_ativos   }})</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-footer bg-transparent" align="center">
+                <a href="#">Contratos vencendo no mês ({{  total_contratos_vencendo }})</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
