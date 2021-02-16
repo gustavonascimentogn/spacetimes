@@ -28,6 +28,7 @@ class ArquivoViewSet(viewsets.ModelViewSet):
             qs = qs.filter(user=self.request.user)
             return qs
 
+
         '''
         ## Bloqueando acesso a esta operação
         def update(self, request, pk=None):

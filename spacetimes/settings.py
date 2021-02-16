@@ -129,9 +129,9 @@ MEDIA_ROOT = (
 )
 MEDIA_URL = '/media/'
 
+
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
-
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -154,9 +154,7 @@ LANGUAGES = (
     ('es', _('Spanish')),
 )
 
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
-)
+
 
 from .local_settings import  *
 

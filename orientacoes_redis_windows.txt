@@ -1,0 +1,11 @@
+########## Redis ########
+
+### Start Celery no Windows
+
+# Execute arquivo: Redis-Server.exe
+C:\Users\gusta\OneDrive\Área de Trabalho\Redis\redis-server.exe
+
+# Em um terminal, execute o celery no terminal, com venv ativada
+celery -A spacetimes worker --pool=solo -l INFO
+
+celery -A spacetimes worker -l INFO

@@ -1,0 +1,673 @@
+{
+	"info": {
+		"_postman_id": "100ccd37-bd84-48be-b701-823f04e1f834",
+		"name": "Magento 2 REST API - 16 exemplos",
+		"description": "Estes exemplos foram baixados em https://www.magenteiro.com/blog/magento-2/api-como-usar-exemplos\n\nAs instruções de uso estão disponíveis o e-mail enviado pra você ao baixá-las no link acima.\n\n---\n\nExemplos de chamadas REST para Magento 2\n\nAutor: Ricardo Martins\n\nSaiba mais e como usar em [www.magenteiro.com/magento2api](https://www.magenteiro.com/magento2api)\n\nVersão: 1.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticações",
+			"item": [
+				{
+					"name": "Obter token de administrador",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "398fab88-b205-47e1-9be2-99bc28730937",
+								"exec": [
+									"pm.collectionVariables.set(\"Admin token\", JSON.parse(responseBody));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "ou application/xml (mas terá que mudar o conteúdo)",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{AdminUser}}\",\n    \"password\": \"{{AdminPass}}\"\n}"
+						},
+						"url": {
+							"raw": "{{Base API URL}}/integration/admin/token",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"integration",
+								"admin",
+								"token"
+							]
+						},
+						"description": "Loga com credenciais de um administrador - Tempo de vida padrão: 4 horas"
+					},
+					"response": []
+				},
+				{
+					"name": "Obter token de cliente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3481eac-9fd7-4c41-b09f-fb96f25670f9",
+								"exec": [
+									"pm.collectionVariables.set(\"Client token\", JSON.parse(responseBody));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "ou application/xml (mas terá que mudar o conteúdo)",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{EmailLoginCliente}}\",\n    \"password\": \"{{SenhaCliente}}\"\n}"
+						},
+						"url": {
+							"raw": "{{Base API URL}}/integration/customer/token",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"integration",
+								"customer",
+								"token"
+							]
+						},
+						"description": "Loga com credenciais de um cliente - \nTempo de vida padrão: 1 hora"
+					},
+					"response": []
+				}
+			],
+			"description": "Tipos de autenticação",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Cliente (Customer API)",
+			"item": [
+				{
+					"name": "Informações de um cliente (/customers/$id)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/customers/1",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers",
+								"1"
+							]
+						},
+						"description": "Obtém informações de um cliente com id específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Informações do cliente atual (/customers/me)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Client token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/customers/me",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers",
+								"me"
+							]
+						},
+						"description": "Obtém informações do cliente desta credencial."
+					},
+					"response": []
+				},
+				{
+					"name": "Cria um novo cliente - mínimo (/customers)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": {\n    \"firstname\": \"Joao\",\n    \"lastname\": \"Silva\",\n    \"email\": \"emaildojoao@gmail.com\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{Base API URL}}/customers",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers"
+							]
+						},
+						"description": "Cria um cliente preenchendo somente os dados obrigatórios."
+					},
+					"response": []
+				},
+				{
+					"name": "Cria um novo cliente - completo (/customers)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": {\n    \"group_id\": \"1\",\n    \"confirmation\": \"false\",\n    \"dob\": \"1984-07-13\",\n    \"email\": \"janedoe2@gmail.com\",\n    \"firstname\": \"Jane\",\n    \"lastname\": \"Doe\",\n    \"middlename\": \"Martins\",\n    \"prefix\": \"\",\n    \"suffix\": \"\",\n    \"gender\": \"2\",\n    \"store_id\": 0,\n    \"taxvat\": \"01234567890\",\n    \"website_id\": 1,\n    \"addresses\": [\n      {\n        \"region\": {\n          \"region_code\": \"SP\",\n          \"region\": \"Santos\",\n          \"region_id\": 508,\n          \"extension_attributes\": {}\n        },\n        \"region_id\": 508,\n        \"country_id\": \"BR\",\n        \"street\": [\n          \"Av. Silva Jardim\",\n          \"302\"\n        ],\n        \"company\": \"Magenteiro\",\n        \"telephone\": \"1331133300\",\n        \"fax\": \"\",\n        \"postcode\": \"11045-510\",\n        \"city\": \"Santos\",\n        \"firstname\": \"Jane\",\n        \"lastname\": \"Doe\",\n        \"middlename\": \"Martins\",\n        \"prefix\": \"\",\n        \"suffix\": \"\",\n        \"vat_id\": \"01234567890\",\n        \"default_shipping\": true,\n        \"default_billing\": true,\n        \"extension_attributes\": {}\n      }\n    ],\n    \"disable_auto_group_change\": 0,\n    \"extension_attributes\": {\n      \"is_subscribed\": true,\n      \"amazon_id\": \"\",\n      \"vertex_customer_code\": \"\"\n    }\n  },\n  \"password\": \"Password1!\"\n}"
+						},
+						"url": {
+							"raw": "{{Base API URL}}/customers",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers"
+							]
+						},
+						"description": "Links: [Descritivo dos campos (aproximado)](https://creativeminds.helpscoutdocs.com/article/1812-multi-user-magento-2-adding-and-modifying-users-restapi) | [Documentação Oficial](https://devdocs.magento.com/redoc/2.3/customer-rest-api.html#tag/customers)\n\nVocê também pode especificar campos personalizados de cliente ou endereço dentro de \"custom_attributes\" (array com \"attribute_code\" e \"value\")"
+					},
+					"response": []
+				},
+				{
+					"name": "Troca senha do cliente atual (/customers/me/password)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Client token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"currentPassword\": \"{{SenhaCliente}}\",\n    \"newPassword\": \"Password1!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base API URL}}/customers/me/password",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers",
+								"me",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativa um cliente (customers/:email/activate)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"confirmationKey\": \"{{ChaveDeConfirmacao}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base API URL}}/customers/{{EmailLoginCliente}}/activate",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers",
+								"{{EmailLoginCliente}}",
+								"activate"
+							]
+						},
+						"description": "Ativa um cliente com uma chave de confirmação enviada por e-mail.\n\nNote que por padrão o Magento não exige que os clientes confirmem seus e-mails."
+					},
+					"response": []
+				},
+				{
+					"name": "Valida dados de cliente (/customers/validate)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer\": {\n        \"id\": 0,\n        \"group_id\": 0,\n        \"default_billing\": \"string\",\n        \"default_shipping\": \"string\",\n        \"confirmation\": \"string\",\n        \"created_at\": \"string\",\n        \"updated_at\": \"string\",\n        \"created_in\": \"string\",\n        \"dob\": \"string\",\n        \"email\": \"string\",\n        \"firstname\": \"string\",\n        \"lastname\": \"string\",\n        \"middlename\": \"string\",\n        \"prefix\": \"string\",\n        \"suffix\": \"string\",\n        \"gender\": 0,\n        \"store_id\": 0,\n        \"taxvat\": \"string\",\n        \"website_id\": 0,\n        \"addresses\": [\n            {\n                \"id\": 0,\n                \"customer_id\": 0,\n                \"region\": {\n                    \"region_code\": \"string\",\n                    \"region\": \"string\",\n                    \"region_id\": 0,\n                    \"extension_attributes\": {}\n                },\n                \"region_id\": 0,\n                \"country_id\": \"string\",\n                \"street\": [\n                    \"string\"\n                ],\n                \"company\": \"string\",\n                \"telephone\": \"string\",\n                \"fax\": \"string\",\n                \"postcode\": \"string\",\n                \"city\": \"string\",\n                \"firstname\": \"string\",\n                \"lastname\": \"string\",\n                \"middlename\": \"string\",\n                \"prefix\": \"string\",\n                \"suffix\": \"string\",\n                \"vat_id\": \"string\",\n                \"default_shipping\": true,\n                \"default_billing\": true,\n                \"extension_attributes\": {},\n                \"custom_attributes\": [\n                    {\n                        \"attribute_code\": \"string\",\n                        \"value\": \"string\"\n                    }\n                ]\n            }\n        ],\n        \"disable_auto_group_change\": 0,\n        \"extension_attributes\": {\n            \"is_subscribed\": true,\n            \"amazon_id\": \"string\",\n            \"vertex_customer_code\": \"string\"\n        },\n        \"custom_attributes\": [\n            {\n                \"attribute_code\": \"string\",\n                \"value\": \"string\"\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Base API URL}}/customers/validate",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customers",
+								"validate"
+							]
+						},
+						"description": "Método geralmente usado anted de criar uma nova conta de cliente. Ele fará apenas validações básicas, como atributos obrigatórios. Sequer valida o e-mail."
+					},
+					"response": []
+				}
+			],
+			"description": "Chamadas relacionadas à API de Cliente",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Grupos de Clientes",
+			"item": [
+				{
+					"name": "Listar grupos de cliente disponíveis (/customerGroups/search)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/customerGroups/search?searchCriteria[filterGroups][0][filters][0][field]=customer_group_id&searchCriteria[filterGroups][0][filters][0][value]=&searchCriteria[filterGroups][0][filters][0][conditionType]=neq",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"customerGroups",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchCriteria[filterGroups][0][filters][0][field]",
+									"value": "customer_group_id"
+								},
+								{
+									"key": "searchCriteria[filterGroups][0][filters][0][value]",
+									"value": ""
+								},
+								{
+									"key": "searchCriteria[filterGroups][0][filters][0][conditionType]",
+									"value": "neq"
+								}
+							]
+						},
+						"description": "Lista todos os grupos de cliente (cujo `customer_group_id` não é igual (neq) a \"\")"
+					},
+					"response": []
+				}
+			],
+			"description": "Relacionados ao customerGroupRepositoryV1",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Webistes e Visões",
+			"item": [
+				{
+					"name": "Lista de visões de loja disponíveis (/store/storeViews)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/store/storeViews",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"store",
+								"storeViews"
+							]
+						},
+						"description": "storeStoreRepositoryV1"
+					},
+					"response": []
+				},
+				{
+					"name": "Lista de Store Groups disponíveis (/store/storeGroups)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/store/storeGroups",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"store",
+								"storeGroups"
+							]
+						},
+						"description": "storeGroupRepositoryV1"
+					},
+					"response": []
+				},
+				{
+					"name": "Lista de Websites disponíveis (/store/websites)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{Admin token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/store/websites",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"store",
+								"websites"
+							]
+						},
+						"description": "storeWebsiteRepositoryV1"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints e chamadas essenciais",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Directory (Regiões, Países, Moedas, etc)",
+			"item": [
+				{
+					"name": "Lista de países (/directory/countries)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/directory/countries",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"directory",
+								"countries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista de regiões de um país (/directory/countries/$countryCode)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/directory/countries/BR",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"directory",
+								"countries",
+								"BR"
+							]
+						},
+						"description": "Lista Estados ou Regiões de um País"
+					},
+					"response": []
+				},
+				{
+					"name": "Informações de moeda da loja (/directory/currency)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base API URL}}/directory/currency",
+							"host": [
+								"{{Base API URL}}"
+							],
+							"path": [
+								"directory",
+								"currency"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "4f299d3e-3186-4183-885f-4774d1f7c74f",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "df5c91bb-70d3-4228-9215-0fbde5667918",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "81926da6-e6ad-4bd3-bff0-c8c54b13fc4c",
+			"key": "Store Base URL",
+			"value": "https://magento2.magenteiro.com",
+			"type": "string"
+		},
+		{
+			"id": "1bd4c328-ae54-45c5-8e1c-ff4b552adef7",
+			"key": "Base API URL",
+			"value": "{{Store Base URL}}/index.php/rest/V1",
+			"type": "string"
+		},
+		{
+			"id": "e4abceda-7547-4ad4-bea2-efb67e7baf12",
+			"key": "Client token",
+			"value": "sera definido quando autenticar um cliente",
+			"type": "string"
+		},
+		{
+			"id": "f619627c-5a17-450c-9b4c-dcf926465f18",
+			"key": "Admin token",
+			"value": "sera definido quando autenticar o admin",
+			"type": "string"
+		},
+		{
+			"id": "a63966bf-c556-4300-a76d-254e89036514",
+			"key": "Store code",
+			"value": "default",
+			"type": "string"
+		},
+		{
+			"id": "85d6a169-8b06-471b-8fd7-f37a0120a328",
+			"key": "CartId",
+			"value": "Definido sempre que uma quote é criada",
+			"type": "string"
+		},
+		{
+			"id": "b5790f6a-60cb-4d89-87e9-24b726ddbd60",
+			"key": "GuestCartId",
+			"value": "Definido automaticamente",
+			"type": "string"
+		},
+		{
+			"id": "c144fd36-9db8-44f5-85a5-f0749976e8dc",
+			"key": "OrderId",
+			"value": "Definido quando um pedido é feito",
+			"type": "string"
+		},
+		{
+			"id": "16cfb19c-55f6-49b9-9569-4ba30ae18e2b",
+			"key": "GuestOrderId",
+			"value": "Definido quando um pedido é feito para visitante",
+			"type": "string"
+		},
+		{
+			"id": "515332a4-03db-4fd6-93e2-390d9989c79f",
+			"key": "InvoiceId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "d67e7da7-2c0d-46f6-a623-eed8ba69bded",
+			"key": "GuestInvoiceId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

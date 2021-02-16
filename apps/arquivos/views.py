@@ -2,6 +2,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from .models import Arquivo
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .tasks import processar_arquivo
 
 
 class ArquivosList(LoginRequiredMixin,ListView):
@@ -22,10 +23,12 @@ class ArquivoEdit(LoginRequiredMixin,UpdateView):
         arquivo = form.save(commit=False)
         user_logado = self.request.user
         arquivo.user = user_logado
+        arquivo.forma_envio='Browser'
         arquivo.save()
+        processar_arquivo.delay(arquivo.pk)
 
         from django.shortcuts import redirect
-        return redirect('list_arquivos','Arquivo anexado com sucesso.')
+        return redirect('list_arquivos', 'Tarefa incluída na fila para execução.')
 
 class ArquivoDelete(LoginRequiredMixin,DeleteView):
     model = Arquivo
@@ -40,9 +43,15 @@ class ArquivoNovo(LoginRequiredMixin,CreateView):
         arquivo = form.save(commit=False)
         user_logado = self.request.user
         arquivo.user = user_logado
+        arquivo.forma_envio = 'Browser'
         arquivo.save()
+        processar_arquivo.delay(arquivo.pk)
 
         from django.shortcuts import redirect
-        return redirect('list_arquivos','Arquivo anexado com sucesso.')
+        return redirect('list_arquivos','Tarefa incluída na fila para execução.')
+
+
+
+
 
 

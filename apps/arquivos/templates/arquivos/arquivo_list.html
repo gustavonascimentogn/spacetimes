@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{%  load static %}
+{% load static %}
 {% block main %}
 
     {% if view.kwargs.mensagem %}
@@ -40,8 +40,21 @@
                 <div class="card-body">
                     <!-- <h5 class="card-title">&nbsp;</h5> -->
                     <p class="card-text">
-                        {{ arquivo.nome }}<br>
-                        <a href="/media/{{ arquivo.arquivo }}" download="true">{{ arquivo.arquivo }}</a> <br>
+                        <a href="/media/{{ arquivo.arquivo }}" download="true">
+                            {% if arquivo.processado %}
+                                <kbd class="bg-success">{{ arquivo.nome }}</kbd>
+                            {% else %}
+                                <kbd class="bg-danger">{{ arquivo.nome }}</kbd>
+                            {% endif %}
+
+                        </a> <br>
+                            Forma de envio: {{ arquivo.forma_envio }}<br>
+                            {% if arquivo.processado %}
+                            Execução: {{ arquivo.tempoExecucaoSegundos | floatformat:2 }} segundos<br>
+                            Espera na fila: {{ arquivo.tempoEsperaFila_segundos | floatformat:2 }} segundos<br>
+                            Resultado: <pre>{{ arquivo.resultado_processamento  }}</pre>
+                            {% endif %}
+
                     </p>
                 </div>
                 <div class="card-footer bg-transparent" align="center">
