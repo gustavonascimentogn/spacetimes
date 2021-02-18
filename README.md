@@ -77,6 +77,11 @@ celery -A spacetimes worker -l INFO
 python manage.py runserver
 
 
+### Video rápido mostrando o start da aplicação
+
+https://drive.google.com/drive/folders/1TMe9EXkJqgFI0yEiP75N1OyYE0Em0XI_?usp=sharing
+
+
 ###################
 #### NAVEGAÇÃO ####
 
