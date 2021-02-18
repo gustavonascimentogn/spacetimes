@@ -32,26 +32,39 @@ https://drive.google.com/drive/folders/1TMe9EXkJqgFI0yEiP75N1OyYE0Em0XI_?usp=sha
 Após download, descompacte o arquivo em qualquer diretório e execute o arquivo "redis-server.exe". Ele criará uma instância do Redis em seu ambiente Windows.
 Caso esteja em ambiente Linux, instale o Redis via comandos Linux e altere a configuração CELERY_BROKER_URL, no arquivo "[raiz_projeto]/spacetimes/local_settings.py" e no arquivo "[raiz_projeto]/spacetimes/celery.py"
 
+
 # ---> ARQUIVO local_settings.py
+
+
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://localhost:6379' # <------ Precisa ser alterado caso rode no Linux
+
+CELERY_BROKER_URL = 'redis://localhost:6379' 
+
 CELERY_ACCEPT_CONTENT = ['application/json']
+
 CELERY_RESULT_SERIALIZER = 'json'
+
 CELERY_TASK_SERIALIZER = 'json'
 
+
 # ---> ARQUIVO celery.py
+
 app = Celery('spacetimes',broker='redis://localhost:6379')
 
 
 ### Execute o Redis (No Windows)
+
 Execute o arquivo "redis-server.exe". Ele criará uma instância do Redis em seu ambiente Windows.
 
 
 ### Execute o Celery (esteja certo que a venv esteja ativa)
 # No windows
+
 celery -A spacetimes worker --pool=solo -l INFO
 
+
 # No Linux
+
 celery -A spacetimes worker -l INFO
 
 
@@ -68,6 +81,7 @@ python manage.py runserver
 #### NAVEGAÇÃO ####
 
 ### HTTP 
+
 http://127.0.0.1:8000/
 user: django
 senha: django
