@@ -13,20 +13,19 @@ from apps.arquivos.models import Arquivo
 
 @shared_task(bind=True)
 def processar_arquivo(self, pk_arquivo):
-    time.sleep(5) ## para forçar a tarefa a ter um tempo mais longo de duração
+    time.sleep(5) ## Em processamento local, com arquivos de tamanho reduzido, a tarefa iniciava sua execução
+                    ## antes de o arquivo ser salvo. Por isso este sleep de 5 segundos.
 
     ### início do processamento do arquivo
     inicio = timeit.default_timer() ## Usando timeit
     inicio_datetime = datetime.now()
     arquivo = Arquivo.objects.get(pk=pk_arquivo)
-    #arquivo.id_task = format(self.request.id)
-    #arquivo.save() ## salvo neste momento para o ID_TASK ficar disponível
     arquivo.dataHoraInicioProcessamento = inicio_datetime
 
     COLUNAS = ['letra_inicial','palavras']
     if arquivo.arquivo.name.find('.csv') != -1 or arquivo.arquivo.name.find('.txt') != -1:
         dados = open(arquivo.arquivo.path)
-        lista_palavras = dados.read().split()
+        lista_palavras = dados.read().upper().split()
         df = DataFrame(columns=COLUNAS)
         for palavra in lista_palavras:
             nova_linha = {'letra_inicial':palavra[0],'palavras':palavra}
@@ -43,7 +42,6 @@ def processar_arquivo(self, pk_arquivo):
     fim = timeit.default_timer()
     arquivo.tempoExecucaoSegundos = fim - inicio
     arquivo.task_context = format(self.request)
-
     arquivo.save()
     return True
 

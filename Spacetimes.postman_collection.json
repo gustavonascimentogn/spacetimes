@@ -1,0 +1,59 @@
+{
+	"info": {
+		"_postman_id": "369d259b-da0c-401d-a4eb-0fa4537c9cd3",
+		"name": "Spacetimes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Enviar Arquivos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Token 6c34d9388297c2dd783656c24f4a04b334795db6"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nome",
+							"value": "novo_arquivo",
+							"type": "text"
+						},
+						{
+							"key": "arquivo",
+							"type": "file",
+							"src": []
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/arquivos/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"arquivos",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
