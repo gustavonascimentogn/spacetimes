@@ -1,9 +1,6 @@
-from datetime import datetime
-
 from django.db import models
-from picklefield.fields import PickledObjectField
-
 from django.contrib.auth.models import User
+## from django_celery_results.models import TaskResult
 
 class Arquivo(models.Model):
     dataHoraCriacao = models.DateTimeField(auto_now_add=True, help_text='Instante de envio do arquivo')
@@ -15,7 +12,8 @@ class Arquivo(models.Model):
     processado = models.BooleanField(default=False, verbose_name='Processado (marcado se Verdadeiro)')
     resultado_processamento = models.TextField(default=None, null=True, blank=True, verbose_name='Resultado do processamento')
     forma_envio = models.CharField(max_length=8, null=True, blank=True, verbose_name='Forma de envio')
-
+    task_context = models.CharField(max_length=200, null=True, blank=True, verbose_name='Contexto da task')
+    id_task = models.CharField(max_length=100, null=True, blank=True, verbose_name='ID Task')
 
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=False, blank=False, verbose_name='User')
 
@@ -35,3 +33,13 @@ class Arquivo(models.Model):
             return diferenca.seconds
         else:
             return None
+
+
+    @property
+    def status_processamento(self):
+        from celery.result import AsyncResult
+        if self.id_task:
+            res = AsyncResult(self.id_task)
+            return res.state
+        else:
+            return 'NOT QUEUED'

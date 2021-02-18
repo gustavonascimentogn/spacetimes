@@ -19,7 +19,9 @@ class ArquivoSerializer(serializers.ModelSerializer):
         )
         arquivo.user = self.context['request'].user
         arquivo.forma_envio = 'API'
-        arquivo.save()
-        processar_arquivo.delay(arquivo.pk)
+        arquivo.save()  ## save para gerar a PK
+        x = processar_arquivo.delay(arquivo.pk)
+        arquivo.id_task = x.task_id
+        arquivo.save()  ## save para salvar a id_task
         return(arquivo)
 

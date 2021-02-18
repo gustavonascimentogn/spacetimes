@@ -1,0 +1,14 @@
+----------------------------
+-:[Install/Register Notes]:-
+----------------------------
+
+o1 - Unpack the release into a directory of your choice.
+o2 - Run the installer and install it.
+03 - Close the software completely (including the taskbar).
+o3 - Copy the patch file into the installation directory and apply it.
+o4 - As always, make sure to have a firewall to block outbound connections.
+o5 - Enjoy!
+
+
+Baixar Software - http://www.baixarsoftware.com
+

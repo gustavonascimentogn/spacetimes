@@ -1,31 +1,29 @@
+from celery.utils.log import get_task_logger
 from pandas import DataFrame
 from unipath import Path
 from datetime import datetime
 import time
 import timeit
+from django_celery_results.models import TaskResult
 
 from celery import shared_task
 from django.http import JsonResponse
 
 from apps.arquivos.models import Arquivo
 
-
-def contar_palavras():
-    print('qualquer coisa')
-
-
-@shared_task
-def processar_arquivo(pk_arquivo):
-    time.sleep(10) ## para forçar a tarefa a ter um tempo mais longo de duração
-    arquivo = Arquivo.objects.filter(pk=pk_arquivo)
+@shared_task(bind=True)
+def processar_arquivo(self, pk_arquivo):
+    time.sleep(5) ## para forçar a tarefa a ter um tempo mais longo de duração
 
     ### início do processamento do arquivo
+    inicio = timeit.default_timer() ## Usando timeit
+    inicio_datetime = datetime.now()
+    arquivo = Arquivo.objects.get(pk=pk_arquivo)
+    #arquivo.id_task = format(self.request.id)
+    #arquivo.save() ## salvo neste momento para o ID_TASK ficar disponível
+    arquivo.dataHoraInicioProcessamento = inicio_datetime
+
     COLUNAS = ['letra_inicial','palavras']
-
-    ### início processamento do arquivo ###
-    arquivo.dataHoraInicioProcessamento = datetime.now()
-    inicio = timeit.default_timer()
-
     if arquivo.arquivo.name.find('.csv') != -1 or arquivo.arquivo.name.find('.txt') != -1:
         dados = open(arquivo.arquivo.path)
         lista_palavras = dados.read().split()
@@ -40,12 +38,12 @@ def processar_arquivo(pk_arquivo):
         arquivo.resultado_processamento = 'Arquivo não possui extensão .csv ou .txt'
 
     arquivo.processado = True
-    ### fim do processamento do arquivo
-
     arquivo.dataHoraFimProcessamento = datetime.now()
+    ### fim do processamento do arquivo
     fim = timeit.default_timer()
     arquivo.tempoExecucaoSegundos = fim - inicio
-    ### fim processamento do arquivo
+    arquivo.task_context = format(self.request)
+
     arquivo.save()
     return True
 

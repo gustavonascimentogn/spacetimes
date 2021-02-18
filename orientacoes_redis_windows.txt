@@ -1,3 +1,15 @@
+
+### Criar venv para o projeto (Python3)
+python3 -m venv spacetimes
+
+### Startar a venv criada e instalar os requisitos necessários
+pip install -r requirements.txt
+
+### 
+
+
+
+
 ########## Redis ########
 
 ### Start Celery no Windows

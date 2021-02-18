@@ -34,31 +34,37 @@
 
     <div class="row">
         {%  for arquivo in object_list %}
-        <div class="col-md-3">
-            <div class="card bg-light mb-3" >
-                <div class="card-header">{{ arquivo.nome }}</div>
-                <div class="card-body">
-                    <!-- <h5 class="card-title">&nbsp;</h5> -->
-                    <p class="card-text">
-                        <a href="/media/{{ arquivo.arquivo }}" download="true">
-                            {% if arquivo.processado %}
-                                <kbd class="bg-success">{{ arquivo.nome }}</kbd>
-                            {% else %}
-                                <kbd class="bg-danger">{{ arquivo.nome }}</kbd>
-                            {% endif %}
 
-                        </a> <br>
-                            Forma de envio: {{ arquivo.forma_envio }}<br>
-                            {% if arquivo.processado %}
+             <div class="col-md-4">
+            <div class="card bg-light mb-4" >
+                <div class="card-header"><h1>Arquivo: {{ arquivo.nome }}</h1></div>
+                <div class="card-body">
+                    {% csrf_token %}
+                    <p class="card-text">
+                        <a href="/media/{{ arquivo.arquivo }}" download="true">Download</a> <br>
+                        Forma de envio: {{ arquivo.forma_envio }}<br>
+                        {% if arquivo.processado %}
                             Execução: {{ arquivo.tempoExecucaoSegundos | floatformat:2 }} segundos<br>
                             Espera na fila: {{ arquivo.tempoEsperaFila_segundos | floatformat:2 }} segundos<br>
+                            Processamento: <kbd class="bg-success">{{ arquivo.status_processamento }}</kbd><br><br>
                             Resultado: <pre>{{ arquivo.resultado_processamento  }}</pre>
-                            {% endif %}
 
+                        {% elif not arquivo.status_processamento == 'FAILURE' %}
+                            Processamento: <kbd class="bg-success">{{ arquivo.status_processamento }}</kbd><br><br>
+                            <div id="div{{arquivo.id_task}}" align="center">
+                                <button id="btn{{arquivo.id_task}}" type="button" onclick="get_task_status('{{ arquivo.id_task }}');" class="btn btn-warning">Clique para acompanhar execução</button><br><br>
+                                <img id="img{{arquivo.id_task}}" src="{% static 'images/loading.gif' %}" alt="Logotipo" title="" style="height:3rem;display:none;" class="" width="80%">
+                                <p id="status{{arquivo.id_task}}"><br>
+                                <p id="status2{{arquivo.id_task}}"><br>
+                            </div>
+                        {% else %}
+                            Processamento: <kbd class="bg-success">{{ arquivo.status_processamento }}</kbd><br><br>
+                        {% endif %}
                     </p>
+
                 </div>
                 <div class="card-footer bg-transparent" align="center">
-
+                    <a href="{% url 'update_arquivo' arquivo.id %}" ><img src="{% static 'images/edit32x32.png'%}" alt="Editar" ></a>&nbsp;
                     <a href="{% url 'delete_arquivo' arquivo.id %}"><img src="{% static 'images/delete.png'%}" alt="Deletar" ></a>&nbsp;
                 </div>
             </div>
@@ -82,4 +88,10 @@
             {% endif %}
         </span>
     </div><br>
+
+{% endblock %}
+
+{% block static %}
+<script type="text/javascript" src="{% static 'jquery/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'jquery/funcoes-ajax.js' %}"></script>
 {% endblock %}
